@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.beans.testfixture.beans.AnnotatedBean;
 import org.springframework.beans.testfixture.beans.ITestBean;
 import org.springframework.beans.testfixture.beans.IndexedTestBean;
@@ -35,7 +36,9 @@ import org.springframework.beans.testfixture.beans.TestAnnotation;
 import org.springframework.beans.testfixture.beans.TestBean;
 import org.springframework.beans.testfixture.beans.factory.DummyFactory;
 import org.springframework.cglib.proxy.NoOp;
+import org.springframework.core.NamedThreadLocal;
 import org.springframework.core.annotation.AliasFor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ObjectUtils;
 
@@ -80,12 +83,22 @@ public class BeanFactoryUtilsTests {
 		this.listableBeanFactory = child;
 	}
 
+	@Test
+	public void test123() {
+		//BeanFactory bf = new XmlBeanFactory(new ClassPathResource("beanFactoryTest.xml"));
+		ClassPathResource classPathResource = new ClassPathResource("beanFactoryTest.xml");
+		NamedThreadLocal<String> namedThreadLocal = new NamedThreadLocal<String>("12323") {
+			@Override
+			protected String initialValue() {
+				return super.initialValue();
+			}
+		};
+	}
 
 	@Test
 	public void testHierarchicalCountBeansWithNonHierarchicalFactory() {
 		StaticListableBeanFactory lbf = new StaticListableBeanFactory();
-		lbf.addBean("t1", new TestBean());
-		lbf.addBean("t2", new TestBean());
+		lbf.addBean("t1", new TestBean());	lbf.addBean("t2", new TestBean());
 		assertThat(BeanFactoryUtils.countBeansIncludingAncestors(lbf) == 2).isTrue();
 	}
 
